@@ -1,0 +1,194 @@
+---
+title: "Run Club Event & Email Text"
+format: html
+editor: visual
+params: 
+  bar_abbr: "Baerlic"
+execute: 
+  echo: false
+  warning: false
+  error: false
+date: today
+---
+
+```{r}
+#| label: set-up
+library(tidyverse)
+library(janitor)
+library(googlesheets4)
+
+```
+
+```{r}
+#| label: authenticate
+
+gs4_auth(email = "em323ily@gmail.com")
+```
+
+
+```{r}
+#| label: get-data
+
+venue_url <- "https://docs.google.com/spreadsheets/d/17KIATzL90vfhzBOlO5v5cyIzjT0ewYoFSVEwAAqcqZI/"
+
+venues_raw <- read_sheet(venue_url,
+                         sheet = "Venues")
+
+# Create a lookup table of which connector words to use based on the route type
+route_words <- tibble("route_type" = c("loop", "out-and-back"),
+                      "connector_words" = c("around", "on the"))
+
+
+
+
+  # mutate(quadrant = case_when(bar_abbr == "Level" ~ "Northeast and Southeast",
+  #                             bar_abbr == "Crux" ~ "Springwater Cooridor",
+  #                             str_detect(address, " SE ") ~ "Southeast",
+  #                             str_detect(address, " NE ") ~ "Northeast",
+  #                             TRUE ~ "ERROR"),
+  #        route_type_wording = case_when(route_type == "loop" & waterfront == "No" ~ str_glue(route_type, " around ", quadrant),
+  #                                       route_type == "loop" & waterfront == "Yes" ~ str_glue(route_type, " around the Waterfront")))
+
+# We will either say
+
+
+
+# quadrant_mapping <- function(bar_abbreviated) {
+#   if (str_detect(address, " SE ")){
+#     quadrant = "Southeast"
+#   } else if (str_detect(address, " NE ")){
+#     quadrant = "Northeast"
+#   } else if (bar_abbreviated == "Crux"){
+#     quadrant = "Springwater Cooridor"
+#   } else if (bar_abbreviated == "Level"){
+#     quadrant = "Northeast and Southeast"
+#   } else {
+#     quadrant = "ERROR"
+#   }
+#   return(quadrant)
+# }
+# 
+# quadrant_mapping_test <- function(x) {
+#   if (contains(" SE ")){
+#     quadrant = "Southeast"
+#   } else if (contains(" NE ")){
+#     quadrant = "Northeast"
+#   } else {
+#     quadrant = "ERROR"
+#   }
+#   return(quadrant)
+# }
+# 
+
+# quadrant_mapping_test <- function(address) {
+#   if (str_detect(address, " SE ") == TRUE){
+#     quadrant = "Southeast"
+#   } else if (str_detect(address, " NE " == TRUE)){
+#     quadrant = "Northeast"
+#   } else {
+#     quadrant = "ERROR"
+#   }
+#   return(quadrant)
+# }
+
+
+  # mutate(route_wording = case_when(is.na(exception) == FALSE ~ paste0(route_type, " ", connector_words, " ", exception),
+  #                                       waterfront == "No" ~ paste0(route_type, " ", connector_words, " ", quadrant),
+  #                                       waterfront == "Yes" ~ paste0(route_type, " ", connector_words, " the Waterfront"),
+  #                                       TRUE ~ NA)) |> view()
+
+
+# loop around Southeast
+# loop around Northeast
+# loop around Northeast and Southeast
+# loop around the Waterfront
+# out-and-back on the Waterfront
+# out-and-back on the Springwater Cooridor
+
+
+
+
+# add some code to deal with SE or NE
+
+```
+
+```{r}
+#| label: functions
+
+# Function to get the quadrant name based on the address
+get_quadrant_name <- function(address){
+  quadrant = case_when(str_detect(address, " SE ") ~ "Southeast",
+                       str_detect(address, " NE ") ~ "Northeast",
+                       TRUE ~ NA)
+  return(quadrant)
+}
+
+# Function to get the wording about route
+get_route_wording <- function(exception, route_type, connector_words, quadrant, waterfront){
+  route_wording = case_when(is.na(exception) == FALSE ~ paste0(route_type, " ", connector_words, " ", exception),
+                            waterfront == "No" ~ paste0(route_type, " ", connector_words, " ", quadrant),
+                            waterfront == "Yes" ~ paste0(route_type, " ", connector_words, " the waterfront"),
+                            TRUE ~ NA)
+  return(route_wording)
+}
+
+
+```
+
+
+
+```{r}
+#| label: clean-data
+
+# Grab the columns we want
+venues <- venues_raw |> 
+  clean_names() |> 
+  select(bar, bar_abbr, address, current_map, route_length, route_type, waterfront, exception, google_link)
+
+# Apply functions and join the route_words dataset
+venues_clean <- venues |>
+  mutate(quadrant = sapply(address, get_quadrant_name)) |> 
+  left_join(route_words, by = "route_type") |> 
+  mutate(route_wording = pmap(list(exception, route_type, connector_words, quadrant, waterfront), get_route_wording))
+
+```
+
+
+```{r}
+#| label: parameters
+
+current_venue <- venues_clean |> 
+  filter(bar_abbr == params$bar_abbr)
+
+```
+
+
+# Event Text
+
+Hello Run Chuggers!
+
+Today we'll meet at `{r} current_venue$bar` in Southeast (`{r} current_venue$address`) for a `{r} current_venue$route_length` mile `{r} current_venue$route_wording`! We will meet around 6:55pm at `{r} current_venue$bar_abbr` and leave for the run at 7:05pm.
+
+Don't forget your I.D! Also, if you have reflective gear or a light to run with, we recommend bringing that too.
+
+Click here for the route: \[UPDATE LINK\] `{r} current_venue$current_map`
+
+If you have any questions, feel free to reach out!
+
+See you all tonight!!
+
+# Email Text
+
+Subject Line: `{r} format(Sys.Date(), "%m/%d")` Run & Chug!
+
+Hello Run Chuggers!
+
+Today we'll meet at `{r} current_venue$bar` in Southeast (`{r} current_venue$address`) UPDATE `{r} current_venue$google_link` for a `{r} current_venue$route_length` mile `{r} current_venue$route_wording`! We will meet around 6:55pm at `{r} current_venue$bar_abbr` and leave for the run at 7:05pm.
+
+Don't forget your I.D! Also, if you have reflective gear or a light to run with, we recommend bringing that too.
+
+Click here for the route: UPDATE LINK
+
+If you have any questions, feel free to reach out!
+
+See you all tonight!!
