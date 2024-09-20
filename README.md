@@ -1,5 +1,5 @@
 # portland-fun-run
-All things related to organizing [Portland Fun Run](https://www.meetup.com/portland-fun-run/), a local running meetup in Portland, OR.  
+All things related to organizing [Portland Fun Run](https://www.meetup.com/portland-fun-run/), a local running meetup I organize in Portland, OR.  
 
 ## Run Club Text  
 This parameterized quarto file is used weekly to create text for both the Meetup event and the weekly Meetup email to members that is customized based on which bar or brewery the run starts at. It automatically pulls in the correct route length, address, wording, etc. to reduce the possibility of error and speed up the process.     
