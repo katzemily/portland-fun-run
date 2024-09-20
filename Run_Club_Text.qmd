@@ -99,7 +99,7 @@ Today we'll meet at `{r} current_venue$bar` in `{r} current_venue$quadrant` (`{r
 
 Don't forget your I.D! Also, if you have reflective gear or a light to run with, we recommend bringing that too.
 
-Click here for the route: \[UPDATE LINK\] `{r} current_venue$current_map`
+Click here for the route: \[ADD HYPERLINK\] `{r} current_venue$current_map`
 
 If you have any questions, feel free to reach out!
 
@@ -111,11 +111,11 @@ Subject Line: `{r} format(Sys.Date(), "%m/%d")` Run & Chug!
 
 Hello Run Chuggers!
 
-Today we'll meet at `{r} current_venue$bar` in `{r} current_venue$quadrant` (`{r} current_venue$address`) UPDATE `{r} current_venue$google_link` for a `{r} current_venue$route_length` mile `{r} current_venue$route_wording`! We will meet around 6:55pm at `{r} current_venue$bar_abbr` and leave for the run at 7:05pm.
+Today we'll meet at `{r} current_venue$bar` in `{r} current_venue$quadrant` ([`{r} current_venue$address`](`{r} current_venue$address`)) for a `{r} current_venue$route_length` mile `{r} current_venue$route_wording`! We will meet around 6:55pm at `{r} current_venue$bar_abbr` and leave for the run at 7:05pm.
 
 Don't forget your I.D! Also, if you have reflective gear or a light to run with, we recommend bringing that too.
 
-Click here for the route: UPDATE LINK
+Click here for the route: [`{r} current_venue$current_map`](`{r} current_venue$current_map`)
 
 If you have any questions, feel free to reach out!
 
