@@ -3,7 +3,7 @@ title: "Run Club Event & Email Text"
 format: html
 editor: visual
 params: 
-  bar_abbr: "Baerlic"
+  bar_abbr: "Level"
 execute: 
   echo: false
   warning: false
@@ -88,7 +88,19 @@ venues_clean <- venues |>
 current_venue <- venues_clean |> 
   filter(bar_abbr == params$bar_abbr)
 
+
 ```
+
+```{r}
+#| label: history
+
+# Add row to historical table
+history <- current_venue |> 
+  mutate(effective_date = as_date(Sys.Date())) |> 
+  rbind(history)
+
+```
+
 
 
 # Event Text
@@ -106,6 +118,8 @@ If you have any questions, feel free to reach out!
 See you all tonight!!
 
 # Email Text
+
+Send to: Portland-Fun-Run-announce@messages.meetup.com
 
 Subject Line: `{r} format(Sys.Date(), "%m/%d")` Run & Chug!
 
