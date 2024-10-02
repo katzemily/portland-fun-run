@@ -3,7 +3,7 @@ title: "Run Club Event & Email Text"
 format: html
 editor: visual
 params: 
-  bar_abbr: "Level"
+  bar_abbr: "Imperial"
 execute: 
   echo: false
   warning: false
@@ -16,6 +16,8 @@ date: today
 library(tidyverse)
 library(janitor)
 library(googlesheets4)
+
+load("historical_data.Rda")
 
 ```
 
