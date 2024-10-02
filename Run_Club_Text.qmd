@@ -99,6 +99,9 @@ history <- current_venue |>
   mutate(effective_date = as_date(Sys.Date())) |> 
   rbind(history)
 
+# Save out
+save(history, file = "historical_data.Rda")
+
 ```
 
 
