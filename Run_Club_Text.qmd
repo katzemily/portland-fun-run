@@ -3,7 +3,7 @@ title: "Run Club Event & Email Text"
 format: html
 editor: visual
 params: 
-  bar_abbr: "Imperial"
+  bar_abbr: "Belmont Station"
 execute: 
   echo: false
   warning: false
@@ -57,7 +57,7 @@ get_quadrant_name <- function(address){
 get_route_wording <- function(exception, route_type, connector_words, quadrant, waterfront){
   route_wording = case_when(is.na(exception) == FALSE ~ paste0(route_type, " ", connector_words, " ", exception),
                             waterfront == "No" ~ paste0(route_type, " ", connector_words, " ", quadrant),
-                            waterfront == "Yes" ~ paste0(route_type, " ", connector_words, " the waterfront"),
+                            waterfront == "Yes" ~ paste0(route_type, " ", connector_words, " waterfront"),
                             TRUE ~ NA)
   return(route_wording)
 }
