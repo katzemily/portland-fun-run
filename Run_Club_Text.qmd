@@ -3,7 +3,7 @@ title: "Run Club Event & Email Text"
 format: html
 editor: visual
 params: 
-  bar_abbr: "Belmont Station"
+  bar_abbr: "Paydirt"
 execute: 
   echo: false
   warning: false
@@ -130,7 +130,7 @@ Subject Line: `{r} format(Sys.Date(), "%m/%d")` Run & Chug!
 
 Hello Run Chuggers!
 
-Today we'll meet at `{r} current_venue$bar` in `{r} current_venue$quadrant` ([`{r} current_venue$address`](`{r} current_venue$address`)) for a `{r} current_venue$route_length` mile `{r} current_venue$route_wording`! We will meet around 6:55pm at `{r} current_venue$bar_abbr` and leave for the run at 7:05pm.
+Today we'll meet at `{r} current_venue$bar` in `{r} current_venue$quadrant` ([`{r} current_venue$address`](`{r} current_venue$google_link`)) for a `{r} current_venue$route_length` mile `{r} current_venue$route_wording`! We will meet around 6:55pm at `{r} current_venue$bar_abbr` and leave for the run at 7:05pm.
 
 Don't forget your I.D! Also, if you have reflective gear or a light to run with, we recommend bringing that too.
 
