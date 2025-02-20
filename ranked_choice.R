@@ -2,13 +2,14 @@ library(tidyverse)
 library(janitor)
 library(googlesheets4)
 library(explore)
+library(ggplot2)
 
 gs4_auth(email = "em323ily@gmail.com")
 
 design_url <- "https://docs.google.com/spreadsheets/d/1sOJM3BFcLuIlmo5b-sx1IA4nYFDEFBPheuBjFLAceQg/edit?gid=1164524725#gid=1164524725"
 
 design_voting_raw <- read_sheet(ss = design_url, 
-           sheet = "feb_11_25_7pm")
+           sheet = "feb_12_25")
 
 
 # Ranked Choice Voting function
@@ -64,10 +65,9 @@ ranked_choice_voting <- function(DATA, choice_1, choice_2, id_col = "id"){
 }
 
 # Results 
-color_winner_2_11_25 <- ranked_choice_voting(design_voting_raw, "color_1", "color_2")
+color_winner <- ranked_choice_voting(design_voting_raw, "color_1", "color_2")
+logo_winner <- ranked_choice_voting(design_voting_raw, "logo_1", "logo_2")
+hat_winner <- ranked_choice_voting(design_voting_raw, "hat_1", "hat_2")
 
-logo_winner_2_11_25 <- ranked_choice_voting(design_voting_raw, "logo_1", "logo_2")
 
-hat_winner_2_11_25 <- ranked_choice_voting(design_voting_raw, "hat_1", "hat_2")
 
-color_winner_2_11_25_7pm <- ranked_choice_voting(design_voting_raw, "color_1", "color_2")
