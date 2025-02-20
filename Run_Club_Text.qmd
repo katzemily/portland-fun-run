@@ -3,7 +3,7 @@ title: "Run Club Event & Email Text"
 format: html
 editor: visual
 params: 
-  bar_abbr: "Level"
+  bar_abbr: "Bye & Bye"
 execute: 
   echo: false
   warning: false
