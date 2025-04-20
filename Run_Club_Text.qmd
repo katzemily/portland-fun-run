@@ -3,7 +3,7 @@ title: "Run Club Event & Email Text"
 format: html
 editor: visual
 params: 
-  bar_abbr: "Bye & Bye"
+  bar_abbr: "Level"
 execute: 
   echo: false
   warning: false
@@ -16,8 +16,6 @@ date: today
 library(tidyverse)
 library(janitor)
 library(googlesheets4)
-
-load("historical_data.Rda")
 
 ```
 
@@ -92,20 +90,6 @@ current_venue <- venues_clean |>
 
 
 ```
-
-```{r}
-#| label: history
-
-# Add row to historical table
-history <- current_venue |> 
-  mutate(effective_date = as_date(Sys.Date())) |> 
-  rbind(history)
-
-# Save out
-save(history, file = "historical_data.Rda")
-
-```
-
 
 
 # Event Text
