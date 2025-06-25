@@ -1,0 +1,66 @@
+---
+title: "Location Analysis"
+format: html
+editor: visual
+execute: 
+  echo: false
+  warning: false
+  error: false
+---
+
+
+```{r set-up}
+
+library(tidyverse)
+library(googlesheets4)
+library(janitor)
+library(gt)
+library(gt)
+
+
+schedule_url <- "https://docs.google.com/spreadsheets/d/1nSorj6G4giUlKnBo7bZFmuv3L6sNMkLIyVUg_AhJLIY/"
+
+gs4_auth(email = "em323ily@gmail.com")
+
+# Get data
+schedule_raw <- read_sheet(ss = schedule_url,
+           sheet = "Schedule")
+
+today <- Sys.Date()
+
+
+
+```
+
+# Run Club Locations
+
+```{r clean-data}
+
+schedule <- schedule_raw |> 
+  clean_names() |> 
+  mutate(future = case_when(today >= as_date(date) ~ "No",
+                            today < as_date(date) ~ "Yes",
+                            TRUE ~ NA)) 
+
+# schedule |> 
+#   filter(future == "No") |> 
+#   count(run_club_location) |> 
+#   arrange(desc(n))
+
+# Average number of weeks between
+schedule |> 
+  filter(future == "No") |> 
+  group_by(run_club_location) |> 
+  summarise(
+    count = n(),
+    avg_weeks_between = if_else(n() > 1,
+                                as.numeric(difftime(max(date), min(date), units = "weeks")) / (n() - 1),
+                                NA),
+    .groups = 'drop'
+  ) |> 
+  arrange(desc(count), avg_weeks_between) |> 
+  gt()
+
+```
+
+
