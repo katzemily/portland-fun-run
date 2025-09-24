@@ -3,7 +3,7 @@ title: "Run Club Event & Email Text"
 format: html
 editor: visual
 params: 
-  bar_abbr: "Hawthorne Asylum"
+  bar_abbr: "Paydirt"
 execute: 
   echo: false
   warning: false
