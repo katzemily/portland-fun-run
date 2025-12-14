@@ -15,7 +15,6 @@ library(tidyverse)
 library(googlesheets4)
 library(janitor)
 library(gt)
-library(gt)
 
 
 schedule_url <- "https://docs.google.com/spreadsheets/d/1nSorj6G4giUlKnBo7bZFmuv3L6sNMkLIyVUg_AhJLIY/"
@@ -38,9 +37,16 @@ today <- Sys.Date()
 
 schedule <- schedule_raw |> 
   clean_names() |> 
-  mutate(future = case_when(today >= as_date(date) ~ "No",
-                            today < as_date(date) ~ "Yes",
-                            TRUE ~ NA)) 
+  mutate(
+    date = as_date(date),
+    future = case_when(today >= date ~ "No",
+                       today < date ~ "Yes",
+                       TRUE ~ NA),
+    current_year = case_when(
+      year(date) == 2025 ~ "Yes",
+      TRUE ~ "No"
+    )
+  )
 
 # schedule |> 
 #   filter(future == "No") |> 
@@ -50,6 +56,7 @@ schedule <- schedule_raw |>
 # Average number of weeks between
 schedule |> 
   filter(future == "No") |> 
+  filter(current_year == "Yes") |> 
   group_by(run_club_location) |> 
   summarise(
     count = n(),
@@ -60,6 +67,45 @@ schedule |>
   ) |> 
   arrange(desc(count), avg_weeks_between) |> 
   gt()
+
+# 2025
+
+schedule |> 
+  filter(future == "No") |> 
+  filter(current_year == "Yes") |> 
+  distinct(run_club_location) |> 
+  nrow()
+# 13 different locations
+
+# Median # of times we went to each location
+schedule |> 
+  filter(future == "No") |> 
+  filter(current_year == "Yes") |> 
+  group_by(run_club_location) |> 
+  summarize(count = n()) |> 
+  ungroup() |> 
+  summarize(avg = median(count))
+
+# of Cancels
+schedule |> 
+  filter(future == "No") |> 
+  filter(current_year == "Yes") |> 
+  filter(status == "Canceled")
+# 0 cancels!! 
+
+# Top 5 Locations
+schedule |> 
+  filter(future == "No") |> 
+  filter(current_year == "Yes") |> 
+  count(run_club_location) |> 
+  arrange(desc(n)) |> 
+  slice_head(n = 5) |> 
+  ggplot(aes(x = fct_reorder(run_club_location, n), y = n)) + 
+  geom_col() + 
+  coord_flip() + 
+  labs(title = "2025: Top 5 Run & Chug Locations") + 
+  theme_minimal()
+
 
 ```
 
